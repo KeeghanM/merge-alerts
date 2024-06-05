@@ -6,5 +6,17 @@ export const usersTable = sqliteTable('users', {
   email: text('email').unique().notNull(),
 })
 
+export const alertsTable = sqliteTable('alerts', {
+  id: text('id').primaryKey(),
+  userId: integer('userId')
+    .notNull()
+    .references(() => usersTable.id),
+  fieldStructure: text('fieldStructure').notNull(),
+  template: text('template').notNull(),
+})
+
 export type InsertUser = typeof usersTable.$inferInsert
 export type SelectUser = typeof usersTable.$inferSelect
+
+export type InsertAlert = typeof alertsTable.$inferInsert
+export type SelectAlert = typeof alertsTable.$inferSelect
