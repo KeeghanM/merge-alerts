@@ -14,11 +14,8 @@ export function AlertList() {
   const [selectedAlertId, setSelectedAlertId] = useState<string | null>(null)
   const popAlerts = useContext(PopAlertsContext)
   const queryClient = useQueryClient()
-  const {
-    error: getListError,
-    data: getListData,
-    isFetching: getListIsFetching,
-  } = useQuery({
+
+  const { error, data, isFetching } = useQuery({
     queryKey: ['alerts'],
     queryFn: async () => {
       const response = await fetch('/api/alerts')
@@ -43,9 +40,7 @@ export function AlertList() {
       popAlerts.addAlert(error.message, 'error')
     },
   })
-
-  if (getListIsFetching) return <div>Loading...</div>
-  if (getListError) return <div>Error: {getListError.message}</div>
+  if (error) return <div>Error: {error.message}</div>
 
   return (
     <>
@@ -61,54 +56,60 @@ export function AlertList() {
             </tr>
           </thead>
           <tbody className="text-center">
-            {getListData?.map((alert) => (
-              <tr key={alert.id}>
-                <td>
-                  <div
-                    className="tooltip"
-                    data-tip="Copy to clipboard"
-                  >
+            {isFetching ? (
+              <tr>
+                <td colSpan={4}>Loading...</td>
+              </tr>
+            ) : (
+              data?.map((alert) => (
+                <tr key={alert.id}>
+                  <td>
+                    <div
+                      className="tooltip"
+                      data-tip="Copy to clipboard"
+                    >
+                      <button
+                        className="btn btn-ghost primary"
+                        onClick={() => {
+                          navigator.clipboard.writeText(alert.id)
+                          popAlerts.addAlert(
+                            'Webhook ID copied to clipboard',
+                            'info',
+                          )
+                        }}
+                      >
+                        {alert.id.substring(0, 8)}...
+                      </button>
+                    </div>
+                  </td>
+                  <td>{alert.type}</td>
+                  <td>{alert.mainBranch}</td>
+                  <td>
                     <button
-                      className="btn btn-ghost primary"
+                      className="btn btn-ghost"
                       onClick={() => {
-                        navigator.clipboard.writeText(alert.id)
-                        popAlerts.addAlert(
-                          'Webhook ID copied to clipboard',
-                          'info',
-                        )
+                        setSelectedAlertId(alert.id)
+                        const modal = document.getElementById(
+                          'delete-modal',
+                        ) as HTMLDialogElement
+                        modal.showModal()
                       }}
                     >
-                      {alert.id.substring(0, 8)}...
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 15 15"
+                        className="text-red-500 w-4 h-4 stroke-current"
+                      >
+                        <path
+                          fill="currentColor"
+                          d="M3.64 2.27L7.5 6.13l3.84-3.84A.92.92 0 0 1 12 2a1 1 0 0 1 1 1a.9.9 0 0 1-.27.66L8.84 7.5l3.89 3.89A.9.9 0 0 1 13 12a1 1 0 0 1-1 1a.92.92 0 0 1-.69-.27L7.5 8.87l-3.85 3.85A.92.92 0 0 1 3 13a1 1 0 0 1-1-1a.9.9 0 0 1 .27-.66L6.16 7.5L2.27 3.61A.9.9 0 0 1 2 3a1 1 0 0 1 1-1c.24.003.47.1.64.27"
+                        ></path>
+                      </svg>
                     </button>
-                  </div>
-                </td>
-                <td>{alert.type}</td>
-                <td>{alert.mainBranch}</td>
-                <td>
-                  <button
-                    className="btn btn-ghost"
-                    onClick={() => {
-                      setSelectedAlertId(alert.id)
-                      const modal = document.getElementById(
-                        'delete-modal',
-                      ) as HTMLDialogElement
-                      modal.showModal()
-                    }}
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 15 15"
-                      className="text-red-500 w-4 h-4 stroke-current"
-                    >
-                      <path
-                        fill="currentColor"
-                        d="M3.64 2.27L7.5 6.13l3.84-3.84A.92.92 0 0 1 12 2a1 1 0 0 1 1 1a.9.9 0 0 1-.27.66L8.84 7.5l3.89 3.89A.9.9 0 0 1 13 12a1 1 0 0 1-1 1a.92.92 0 0 1-.69-.27L7.5 8.87l-3.85 3.85A.92.92 0 0 1 3 13a1 1 0 0 1-1-1a.9.9 0 0 1 .27-.66L6.16 7.5L2.27 3.61A.9.9 0 0 1 2 3a1 1 0 0 1 1-1c.24.003.47.1.64.27"
-                      ></path>
-                    </svg>
-                  </button>
-                </td>
-              </tr>
-            ))}
+                  </td>
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
       </div>

@@ -1,17 +1,22 @@
 'use client'
 import { useState } from 'react'
 import { CreatorForm } from './form'
+import { useQueryClient } from '@tanstack/react-query'
 
 export function Creator() {
-  // This is a simple way to reset the form
-  // by changing the key of the form component
-  // as the useFormState hook does not provide
-  // a way to reset the form.
   const [key, setKey] = useState(0)
+  const client = useQueryClient()
   return (
     <CreatorForm
       key={key}
-      reset={() => setKey(key + 1)}
+      reset={() => {
+        // Increment the key to reset the form
+        setKey(key + 1)
+      }}
+      invalidate={() => {
+        // Invalidate the alerts query to refetch the data
+        client.invalidateQueries({ queryKey: ['alerts'] })
+      }}
     />
   )
 }
