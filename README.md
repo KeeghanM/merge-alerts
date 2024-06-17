@@ -16,7 +16,7 @@ There is no logging, so this is safe to use for corporate projects or private re
 6. Copy the URL provided
 7. Go to your repository settings and add a new webhook
 8. Paste the URL you copied into the new webhook URL field
-9. Select the events you want to monitor (usually just "push" or "merge")
+9. Select application/json as the content type & "push" as the event
 10. Done! You will now receive an email notification when a merge is made to the specified branch.
 
 Note: The alert doesn't know about the repository, so you can use the same URL for multiple repositories. Provided the branch name is the same!
