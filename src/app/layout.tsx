@@ -5,6 +5,7 @@ import type { Metadata } from 'next'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import './globals.css'
 import { Providers } from './providers'
+import { PopAlerts } from '@/components/popAlerts/pop-alerts'
 
 export const metadata: Metadata = {
   title: 'Merge Alerts',
@@ -24,6 +25,7 @@ export default function RootLayout({
       <body>
         <Providers>
           {children}
+          <PopAlerts />
           <ReactQueryDevtools initialIsOpen={false} />
         </Providers>
       </body>

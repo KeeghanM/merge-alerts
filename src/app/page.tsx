@@ -1,4 +1,5 @@
 import { auth } from '@/auth'
+import { AlertList } from '@/components/alertList/alert-list'
 import { Creator } from '@/components/creator/creator'
 import { SignIn } from '@/components/signIn/sign-in'
 
@@ -13,6 +14,7 @@ export default async function Home() {
         {session?.user ? (
           <div className="flex flex-col gap-4 w-[80vw] items-center">
             <Creator />
+            <AlertList />
           </div>
         ) : (
           <SignIn />
