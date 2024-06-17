@@ -21,19 +21,6 @@ export async function POST(
     const { id } = params as { id: string }
     const body = await request.json()
 
-    console.log('Alert ID:', id)
-    console.log('Webhook data:', body)
-
-    await resend.emails.send({
-      from: 'MergeAlerts <alerts@keeghan.io>',
-      to: 'alerts@keeghan.io',
-      subject: 'This is a test',
-      //   react: AlertEmailTemplate(emailData) as React.ReactElement,
-      text: JSON.stringify(body),
-    })
-
-    return Response.json('Success')
-
     // Check if the alert exists
     const alert = await db
       .select()
@@ -83,6 +70,7 @@ export async function POST(
     // Return a success message
     return Response.json('Email sent')
   } catch (error) {
+    console.error(error)
     return Response.json({ error }, { status: 500 })
   }
 }
