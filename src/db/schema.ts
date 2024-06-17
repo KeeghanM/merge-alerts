@@ -3,12 +3,14 @@ import type { AdapterAccountType } from 'next-auth/adapters'
 
 // Actual schema
 export const alerts = sqliteTable('alerts', {
-  id: text('id').primaryKey(),
-  userId: integer('userId')
+  id: text('id')
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  userId: text('userId')
     .notNull()
     .references(() => users.id),
-  fieldStructure: text('fieldStructure').notNull(),
-  template: text('template').notNull(),
+  type: text('type').notNull().default('GitHub'),
+  mainBranch: text('mainBranch').notNull().default('main'),
 })
 
 // Authentication & user accounts

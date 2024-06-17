@@ -1,3 +1,6 @@
+// Needed for Vertu security bollocks
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
+
 import NextAuth from 'next-auth'
 import Resend from 'next-auth/providers/resend'
 import { DrizzleAdapter } from '@auth/drizzle-adapter'

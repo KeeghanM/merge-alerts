@@ -1,4 +1,5 @@
 import { signIn } from '@/auth'
+import { LoginSubmit } from './submit'
 
 export function SignIn() {
   return (
@@ -16,12 +17,7 @@ export function SignIn() {
         required
         className="input input-bordered w-full max-w-xs"
       />
-      <button
-        type="submit"
-        className="btn btn-primary"
-      >
-        Log In
-      </button>
+      <LoginSubmit />
     </form>
   )
 }

@@ -1,3 +1,6 @@
+// Needed for Vertu security bollocks
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
+
 import 'dotenv/config'
 import { defineConfig } from 'drizzle-kit'
 export default defineConfig({
