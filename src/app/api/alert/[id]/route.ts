@@ -24,6 +24,14 @@ export async function POST(
     console.log('Alert ID:', id)
     console.log('Webhook data:', body)
 
+    await resend.emails.send({
+      from: 'MergeAlerts <alerts@keeghan.io>',
+      to: 'alerts@keeghan.io',
+      subject: 'This is a test',
+      //   react: AlertEmailTemplate(emailData) as React.ReactElement,
+      text: JSON.stringify(body),
+    })
+
     return Response.json('Success')
 
     // Check if the alert exists
