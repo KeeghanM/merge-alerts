@@ -8,7 +8,7 @@ There is no logging, so this is safe to use for corporate projects or private re
 
 ## Usage
 
-1. Go to www.merge-alerts.vercel.app
+1. Go to https://merge-alerts.vercel.app
 2. Login with your email address (verified by Magic Links)
 3. Select whether the source is GitHub or GitLab
 4. Select the branch you want to monitor
