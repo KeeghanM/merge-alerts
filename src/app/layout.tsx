@@ -1,6 +1,3 @@
-// Needed for Vertu security bollocks
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
-
 import type { Metadata } from 'next'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import './globals.css'
