@@ -13,8 +13,6 @@ export function generateDataGitLab(body: any): AlertEmailTemplateProps {
   return {
     project: 'project',
     branchName: 'branchName',
-    title: 'title',
-    description: 'description',
     author: 'author',
     url: 'url',
     date: 'date',
