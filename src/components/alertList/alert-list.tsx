@@ -1,8 +1,8 @@
 'use client'
 
 import { PopAlertsContext } from '@/app/providers'
-import { useQuery } from '@tanstack/react-query'
-import { useContext } from 'react'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useContext, useState } from 'react'
 
 type Alert = {
   id: string
@@ -11,8 +11,14 @@ type Alert = {
 }
 
 export function AlertList() {
+  const [selectedAlertId, setSelectedAlertId] = useState<string | null>(null)
   const popAlerts = useContext(PopAlertsContext)
-  const { error, data, isFetching } = useQuery({
+  const queryClient = useQueryClient()
+  const {
+    error: getListError,
+    data: getListData,
+    isFetching: getListIsFetching,
+  } = useQuery({
     queryKey: ['alerts'],
     queryFn: async () => {
       const response = await fetch('/api/alerts')
@@ -21,8 +27,25 @@ export function AlertList() {
     },
   })
 
-  if (isFetching) return <div>Loading...</div>
-  if (error) return <div>Error: {error.message}</div>
+  const deleteMutation = useMutation({
+    mutationFn: async (id: string) => {
+      const response = await fetch('/api/alerts', {
+        method: 'DELETE',
+        body: JSON.stringify({ id }),
+      })
+      if (!response.ok) throw new Error(response.statusText)
+    },
+    onSuccess: () => {
+      popAlerts.addAlert('Alert deleted', 'success')
+      queryClient.invalidateQueries({ queryKey: ['alerts'] })
+    },
+    onError: (error) => {
+      popAlerts.addAlert(error.message, 'error')
+    },
+  })
+
+  if (getListIsFetching) return <div>Loading...</div>
+  if (getListError) return <div>Error: {getListError.message}</div>
 
   return (
     <>
@@ -38,7 +61,7 @@ export function AlertList() {
             </tr>
           </thead>
           <tbody className="text-center">
-            {data?.map((alert) => (
+            {getListData?.map((alert) => (
               <tr key={alert.id}>
                 <td>
                   <div
@@ -61,12 +84,60 @@ export function AlertList() {
                 </td>
                 <td>{alert.type}</td>
                 <td>{alert.mainBranch}</td>
-                <td></td>
+                <td>
+                  <button
+                    className="btn btn-ghost"
+                    onClick={() => {
+                      setSelectedAlertId(alert.id)
+                      const modal = document.getElementById(
+                        'delete-modal',
+                      ) as HTMLDialogElement
+                      modal.showModal()
+                    }}
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 15 15"
+                      className="text-red-500 w-4 h-4 stroke-current"
+                    >
+                      <path
+                        fill="currentColor"
+                        d="M3.64 2.27L7.5 6.13l3.84-3.84A.92.92 0 0 1 12 2a1 1 0 0 1 1 1a.9.9 0 0 1-.27.66L8.84 7.5l3.89 3.89A.9.9 0 0 1 13 12a1 1 0 0 1-1 1a.92.92 0 0 1-.69-.27L7.5 8.87l-3.85 3.85A.92.92 0 0 1 3 13a1 1 0 0 1-1-1a.9.9 0 0 1 .27-.66L6.16 7.5L2.27 3.61A.9.9 0 0 1 2 3a1 1 0 0 1 1-1c.24.003.47.1.64.27"
+                      ></path>
+                    </svg>
+                  </button>
+                </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
+      <dialog
+        id="delete-modal"
+        className="modal"
+      >
+        <div className="modal-box">
+          <h3 className="font-bold text-lg text-red-500">Delete Webhook?</h3>
+          <p className="py-4">
+            This action cannot be undone. Are you sure you want to delete this?
+          </p>
+          <p className="p4-4">Click close or press ESC to cancel.</p>
+          <div className="modal-action">
+            <form method="dialog">
+              <button
+                onClick={() => {
+                  if (!selectedAlertId) return
+                  deleteMutation.mutate(selectedAlertId)
+                }}
+                className="btn btn-error mr-4"
+              >
+                Delete
+              </button>
+              <button className="btn btn-primary">Close</button>
+            </form>
+          </div>
+        </div>
+      </dialog>
     </>
   )
 }
