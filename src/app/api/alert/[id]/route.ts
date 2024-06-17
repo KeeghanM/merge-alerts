@@ -24,6 +24,8 @@ export async function POST(
     console.log('Alert ID:', id)
     console.log('Webhook data:', body)
 
+    return Response.json('Success')
+
     // Check if the alert exists
     const alert = await db
       .select()
