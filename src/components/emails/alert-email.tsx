@@ -1,6 +1,7 @@
 import * as React from 'react'
 
-type AlertEmailTemplateProps = {
+export type AlertEmailTemplateProps = {
+  project: string
   branchName: string
   title: string
   description: string

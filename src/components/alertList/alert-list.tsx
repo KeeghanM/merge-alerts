@@ -71,7 +71,9 @@ export function AlertList() {
                       <button
                         className="btn btn-ghost primary"
                         onClick={() => {
-                          navigator.clipboard.writeText(alert.id)
+                          navigator.clipboard.writeText(
+                            `${process.env.NEXT_PUBLIC_HOOK_BASE}${alert.id}`,
+                          )
                           popAlerts.addAlert(
                             'Webhook ID copied to clipboard',
                             'info',
