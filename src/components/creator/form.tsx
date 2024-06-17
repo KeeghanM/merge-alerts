@@ -5,6 +5,9 @@ import { CreateAction } from './action'
 import { CreateSubmit } from './submit'
 import { PopAlertsContext } from '@/app/providers'
 
+// TODO: Optionally include full commit history in email
+// TODO: Set up for PR closing instead of push/merge
+
 export function CreatorForm({
   reset,
   invalidate,
