@@ -18,11 +18,12 @@ export async function GET() {
 
     return Response.json(alertList)
   } catch (error) {
-    const msg =
-      error instanceof Error ? error.message : 'An unknown error occurred'
-    return new Response(msg, {
-      status: 500,
-    })
+    return Response.json(
+      { error },
+      {
+        status: 500,
+      },
+    )
   }
 }
 
@@ -34,12 +35,13 @@ export async function DELETE(request: Request) {
     await db
       .delete(alerts)
       .where(and(eq(alerts.userId, session.user.id), eq(alerts.id, id)))
-    return new Response('Deleted', { status: 200 })
+    return Response.json('Deleted', { status: 200 })
   } catch (error) {
-    const msg =
-      error instanceof Error ? error.message : 'An unknown error occurred'
-    return new Response(msg, {
-      status: 500,
-    })
+    return Response.json(
+      { error },
+      {
+        status: 500,
+      },
+    )
   }
 }

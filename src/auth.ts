@@ -10,7 +10,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: DrizzleAdapter(db),
   providers: [
     Resend({
-      apiKey: process.env.AUTH_RESEND_KEY,
+      apiKey: process.env.RESEND_API_KEY,
       from: 'auth@keeghan.io',
     }),
   ],
