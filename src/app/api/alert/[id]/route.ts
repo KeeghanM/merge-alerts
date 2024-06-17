@@ -21,6 +21,9 @@ export async function POST(
     const { id } = params as { id: string }
     const body = await request.json()
 
+    console.log('Alert ID:', id)
+    console.log('Webhook data:', body)
+
     // Check if the alert exists
     const alert = await db
       .select()
