@@ -6,17 +6,19 @@ type Alert = {
   mainBranch: string
 }
 export function validateGitHub(body: any, alert: Alert) {
-  return true
+  // We are only interested in pushes to the designated branch
+  // and then while we're here let's ensure it has all the required data
+  return (
+    body.ref === `refs/heads/${alert.mainBranch}` && body.pusher !== undefined
+  )
 }
 
 export function generateDataGitHub(body: any): AlertEmailTemplateProps {
   return {
-    project: 'project',
-    branchName: 'branchName',
-    title: 'title',
-    description: 'description',
-    author: 'author',
-    url: 'url',
-    date: 'date',
+    project: body.repository.full_name,
+    branchName: body.ref.split('/').pop(),
+    author: body.pusher.name,
+    url: body.compare,
+    date: new Date().toISOString(),
   }
 }

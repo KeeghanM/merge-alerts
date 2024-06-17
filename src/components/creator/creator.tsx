@@ -3,6 +3,9 @@ import { useState } from 'react'
 import { CreatorForm } from './form'
 import { useQueryClient } from '@tanstack/react-query'
 
+// TODO: Optionally include full commit history in email
+// TODO: Set up for PR closing instead of push/merge
+
 export function Creator() {
   const [key, setKey] = useState(0)
   const client = useQueryClient()
