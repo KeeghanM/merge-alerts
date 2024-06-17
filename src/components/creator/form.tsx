@@ -1,8 +1,9 @@
 'use client'
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { useFormState } from 'react-dom'
 import { CreateAction } from './action'
 import { CreateSubmit } from './submit'
+import { PopAlertsContext } from '@/app/providers'
 
 export function CreatorForm({
   reset,
@@ -11,6 +12,7 @@ export function CreatorForm({
   reset: () => void
   invalidate: () => void
 }) {
+  const popAlerts = useContext(PopAlertsContext)
   const [state, formAction] = useFormState(CreateAction, {
     success: true,
     message: '',
@@ -81,9 +83,22 @@ export function CreatorForm({
             Use the below webhook in your repository to receive alerts for new
             merges.
           </p>
-          <p className="text-green-500">
-            {`${process.env.NEXT_PUBLIC_HOOK_BASE}${state.id}`}
-          </p>
+          <div
+            className="tooltip"
+            data-tip="Copy to clipboard"
+          >
+            <button
+              className="btn btn-ghost text-green-500"
+              onClick={() => {
+                navigator.clipboard.writeText(
+                  `${process.env.NEXT_PUBLIC_HOOK_BASE}${state.id}`,
+                )
+                popAlerts.addAlert('Webhook ID copied to clipboard', 'info')
+              }}
+            >
+              {`${process.env.NEXT_PUBLIC_HOOK_BASE}${state.id}`}
+            </button>
+          </div>
           <button
             onClick={() => {
               reset()
