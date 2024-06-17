@@ -10,11 +10,13 @@ export type AlertEmailTemplateProps = {
 
 export const AlertEmailTemplate: React.FC<
   Readonly<AlertEmailTemplateProps>
-> = ({ branchName, author, url, date }) => (
+> = ({ project, branchName, author, url, date }) => (
   <div>
-    <h1>New commit on {branchName}</h1>
+    <h1>
+      {project} has a new push on {branchName}
+    </h1>
     <p>Author: {author}</p>
+    <p>Date: {date}</p>
     <a href={url}>View differences</a>
-    <p>{date}</p>
   </div>
 )
