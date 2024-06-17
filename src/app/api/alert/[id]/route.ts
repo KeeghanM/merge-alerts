@@ -58,8 +58,7 @@ export async function POST(
       from: 'MergeAlerts <alerts@keeghan.io>',
       to: user[0].email,
       subject: subject,
-      //   react: AlertEmailTemplate(emailData) as React.ReactElement,
-      text: JSON.stringify(body),
+      react: AlertEmailTemplate(emailData) as React.ReactElement,
     })
 
     // Handle any errors
