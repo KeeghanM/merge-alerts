@@ -6,8 +6,9 @@ import { useContext, useState } from 'react'
 
 type Alert = {
   id: string
-  type: string
+  source: 'GitHub' | 'GitLab'
   branch: string
+  trigger: 'push' | 'pr'
 }
 
 export function AlertList() {
@@ -44,21 +45,22 @@ export function AlertList() {
 
   return (
     <>
-      <h1>Alerts</h1>
-      <div className="overflow-x-auto">
+      <div className="overflow-x-auto bg-gray-100 bg-opacity-10 py-4 px-12 rounded-lg border border-gray-700 shadow-md w-fit text-center">
+        <h2 className="text-2xl font-bold mb-4">Alerts</h2>
         <table className="table table-zebra">
           <thead>
             <tr>
               <th>Webhook ID</th>
+              <th>Trigger</th>
               <th>Source</th>
-              <th>Main Branch Name</th>
+              <th>Branch Name</th>
               <th>Delete</th>
             </tr>
           </thead>
           <tbody className="text-center">
             {isFetching ? (
               <tr>
-                <td colSpan={4}>Loading...</td>
+                <td colSpan={5}>Loading...</td>
               </tr>
             ) : (
               data?.map((alert) => (
@@ -84,7 +86,8 @@ export function AlertList() {
                       </button>
                     </div>
                   </td>
-                  <td>{alert.type}</td>
+                  <td>{alert.trigger === 'push' ? 'Push' : 'Pull Request'}</td>
+                  <td>{alert.source}</td>
                   <td>{alert.branch}</td>
                   <td>
                     <button

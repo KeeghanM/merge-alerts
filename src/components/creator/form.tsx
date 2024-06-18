@@ -6,7 +6,6 @@ import { CreateSubmit } from './submit'
 import { PopAlertsContext } from '@/app/providers'
 
 // TODO: Optionally include full commit history in email
-// TODO: Set up for PR closing instead of push/merge
 
 export function CreatorForm({
   reset,
@@ -21,7 +20,8 @@ export function CreatorForm({
     message: '',
     id: null,
   })
-  const [provider, setProvider] = useState('GitHub')
+  const [provider, setProvider] = useState<'GitHub' | 'GitLab'>('GitHub')
+  const [trigger, setTrigger] = useState<'push' | 'pr'>('push')
 
   useEffect(() => {
     if (!state) return
@@ -57,6 +57,30 @@ export function CreatorForm({
               type="hidden"
               name="service"
               value={provider}
+              required
+              className="hidden"
+            />
+          </div>
+          <div className="form-control w-52">
+            <h3 className="font-bold">Trigger</h3>
+            <label className="cursor-pointer label w-full">
+              <span className={trigger === 'push' ? '' : 'label-text'}>
+                Push
+              </span>
+              <input
+                type="checkbox"
+                className="toggle [--tglbg:black] bg-primary hover:bg-primary border-primary"
+                defaultChecked={false}
+                onChange={(e) => setTrigger(e.target.checked ? 'pr' : 'push')}
+              />
+              <span className={trigger === 'pr' ? '' : 'label-text'}>
+                Pull Request
+              </span>
+            </label>
+            <input
+              type="hidden"
+              name="trigger"
+              value={trigger}
               required
               className="hidden"
             />

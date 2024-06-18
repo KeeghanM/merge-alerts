@@ -12,6 +12,7 @@ export async function GET() {
         id: alerts.id,
         source: alerts.source,
         branch: alerts.branch,
+        trigger: alerts.trigger,
       })
       .from(alerts)
       .where(eq(alerts.userId, session.user.id))

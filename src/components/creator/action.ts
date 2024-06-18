@@ -14,7 +14,9 @@ export async function CreateAction(
 
     const service = formData.get('service') as 'GitHub' | 'GitLab'
     const branch = formData.get('branch') as string
-    if (service === undefined || branch === undefined)
+    const trigger = formData.get('trigger') as 'push' | 'pr'
+
+    if (service === undefined || branch === undefined || trigger === undefined)
       throw new Error('Invalid form data')
 
     const alert = await db
@@ -23,6 +25,7 @@ export async function CreateAction(
         userId: session.user.id,
         source: service,
         branch: branch,
+        trigger: trigger,
       })
       .returning({
         id: alerts.id,
