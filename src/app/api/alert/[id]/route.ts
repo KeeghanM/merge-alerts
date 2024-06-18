@@ -21,6 +21,8 @@ export async function POST(
     const { id } = params as { id: string }
     const body = await request.json()
 
+    console.log(JSON.stringify(body))
+
     // Check if the alert exists
     const selectedAlerts = await db
       .select()
