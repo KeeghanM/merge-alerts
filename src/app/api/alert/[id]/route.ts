@@ -1,14 +1,14 @@
 // Handles the actual webhook alerting, needs to check the ID coming from the path
 // and then notify the correct user
 
-import { AlertEmailTemplate } from '@/components/emails/alert-email'
-import type { AlertEmailTemplateProps } from '@/components/emails/alert-email'
+import { GenerateEmail } from '@/app/util/generate-email'
+import { GenerateSubject } from '@/app/util/generate-subject'
+import { validateGitHub } from '@/app/util/validate-github'
+import { validateGitLab } from '@/app/util/validate-gitlab'
 import { db } from '@/db/db'
 import { alerts, users } from '@/db/schema'
 import { eq } from 'drizzle-orm'
 import { Resend } from 'resend'
-import { generateDataGitLab, validateGitLab } from './functions/gitlab'
-import { generateDataGitHub, validateGitHub } from './functions/github'
 
 const resend = new Resend(process.env.RESEND_API_KEY)
 
@@ -22,43 +22,46 @@ export async function POST(
     const body = await request.json()
 
     // Check if the alert exists
-    const alert = await db
+    const selectedAlerts = await db
       .select()
       .from(alerts)
       .where(eq(alerts.id, id))
       .limit(1)
-    if (alert.length === 0)
+    if (selectedAlerts.length === 0)
       return Response.json('Alert not found', { status: 404 })
+
+    // Get the alert
+    const alert = selectedAlerts[0]
 
     // Check if the webhook data matches the alert
     const match =
-      alert[0].source === 'GitHub'
-        ? validateGitHub(body, alert[0])
-        : validateGitLab(body, alert[0])
+      alert.source === 'GitHub'
+        ? validateGitHub(body, alert)
+        : validateGitLab(body, alert)
     if (!match) return Response.json('Webhook data does not need alerting')
 
     // Get the user to notify from the alert
     const user = await db
       .select()
       .from(users)
-      .where(eq(users.id, alert[0].userId))
+      .where(eq(users.id, alert.userId))
       .limit(1)
     if (user.length === 0)
       return Response.json('User not found', { status: 404 })
 
-    // Generate the email data & subject
-    const emailData: AlertEmailTemplateProps =
-      alert[0].source === 'GitHub'
-        ? generateDataGitHub(body)
-        : generateDataGitLab(body)
-    const subject = `Merge Alert for ${emailData.project} on ${emailData.branchName}`
-
-    // Notify the user
+    // Send the email
     const { error } = await resend.emails.send({
       from: 'MergeAlerts <alerts@keeghan.io>',
       to: user[0].email,
-      subject: subject,
-      react: AlertEmailTemplate(emailData) as React.ReactElement,
+      subject: GenerateSubject({
+        body,
+        source: alert.source as 'GitHub' | 'GitLab',
+      }),
+      react: GenerateEmail({
+        body,
+        source: alert.source as 'GitHub' | 'GitLab',
+        trigger: alert.trigger as 'push' | 'pr',
+      }),
     })
 
     // Handle any errors

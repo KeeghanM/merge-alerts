@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-export type AlertEmailTemplateProps = {
+type PushEmailProps = {
   project: string
   branchName: string
   author: string
@@ -8,9 +8,13 @@ export type AlertEmailTemplateProps = {
   date: string
 }
 
-export const AlertEmailTemplate: React.FC<
-  Readonly<AlertEmailTemplateProps>
-> = ({ project, branchName, author, url, date }) => (
+export const PushEmailTemplate: React.FC<Readonly<PushEmailProps>> = ({
+  project,
+  branchName,
+  author,
+  url,
+  date,
+}) => (
   <div>
     <h1>
       {project} has a new push on {branchName}
