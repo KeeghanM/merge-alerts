@@ -10,8 +10,8 @@ export async function GET() {
     const alertList = await db
       .select({
         id: alerts.id,
-        type: alerts.type,
-        mainBranch: alerts.mainBranch,
+        source: alerts.source,
+        branch: alerts.branch,
       })
       .from(alerts)
       .where(eq(alerts.userId, session.user.id))

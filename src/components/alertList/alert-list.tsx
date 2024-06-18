@@ -7,7 +7,7 @@ import { useContext, useState } from 'react'
 type Alert = {
   id: string
   type: string
-  mainBranch: string
+  branch: string
 }
 
 export function AlertList() {
@@ -85,7 +85,7 @@ export function AlertList() {
                     </div>
                   </td>
                   <td>{alert.type}</td>
-                  <td>{alert.mainBranch}</td>
+                  <td>{alert.branch}</td>
                   <td>
                     <button
                       className="btn btn-ghost"

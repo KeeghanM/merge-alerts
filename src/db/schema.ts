@@ -9,8 +9,9 @@ export const alerts = sqliteTable('alerts', {
   userId: text('userId')
     .notNull()
     .references(() => users.id),
-  type: text('type').notNull().default('GitHub'),
-  mainBranch: text('mainBranch').notNull().default('main'),
+  source: text('source').notNull().default('GitHub'),
+  branch: text('branch').notNull().default('main'),
+  trigger: text('trigger').notNull().default('push'),
 })
 
 // Authentication & user accounts

@@ -13,16 +13,16 @@ export async function CreateAction(
     if (!session?.user?.id) throw new Error('Unauthorized')
 
     const service = formData.get('service') as 'GitHub' | 'GitLab'
-    const mainBranch = formData.get('mainBranch') as string
-    if (service === undefined || mainBranch === undefined)
+    const branch = formData.get('branch') as string
+    if (service === undefined || branch === undefined)
       throw new Error('Invalid form data')
 
     const alert = await db
       .insert(alerts)
       .values({
         userId: session.user.id,
-        type: service,
-        mainBranch: mainBranch,
+        source: service,
+        branch: branch,
       })
       .returning({
         id: alerts.id,

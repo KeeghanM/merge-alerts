@@ -2,15 +2,13 @@ import type { AlertEmailTemplateProps } from '@/components/emails/alert-email'
 type Alert = {
   id: string
   userId: string
-  type: string
-  mainBranch: string
+  source: string
+  branch: string
 }
 export function validateGitHub(body: any, alert: Alert) {
   // We are only interested in pushes to the designated branch
   // and then while we're here let's ensure it has all the required data
-  return (
-    body.ref === `refs/heads/${alert.mainBranch}` && body.pusher !== undefined
-  )
+  return body.ref === `refs/heads/${alert.branch}` && body.pusher !== undefined
 }
 
 export function generateDataGitHub(body: any): AlertEmailTemplateProps {

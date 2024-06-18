@@ -32,7 +32,7 @@ export async function POST(
 
     // Check if the webhook data matches the alert
     const match =
-      alert[0].type === 'GitHub'
+      alert[0].source === 'GitHub'
         ? validateGitHub(body, alert[0])
         : validateGitLab(body, alert[0])
     if (!match) return Response.json('Webhook data does not need alerting')
@@ -48,7 +48,7 @@ export async function POST(
 
     // Generate the email data & subject
     const emailData: AlertEmailTemplateProps =
-      alert[0].type === 'GitHub'
+      alert[0].source === 'GitHub'
         ? generateDataGitHub(body)
         : generateDataGitLab(body)
     const subject = `Merge Alert for ${emailData.project} on ${emailData.branchName}`

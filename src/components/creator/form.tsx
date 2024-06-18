@@ -66,7 +66,7 @@ export function CreatorForm({
               <h3 className="font-bold">Main Branch Name</h3>
               <input
                 type="text"
-                name="mainBranch"
+                name="branch"
                 placeholder="main"
                 required
                 className="input input-bordered w-full"
