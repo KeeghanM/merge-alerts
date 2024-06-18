@@ -4,7 +4,7 @@ type PushEmailProps = {
   project: string
   branchName: string
   author: string
-  url: string
+  url?: string
   date: string
 }
 
@@ -21,6 +21,6 @@ export const PushEmailTemplate: React.FC<Readonly<PushEmailProps>> = ({
     </h1>
     <p>Author: {author}</p>
     <p>Date: {date}</p>
-    <a href={url}>View differences</a>
+    {url && <a href={url}>View differences</a>}
   </div>
 )

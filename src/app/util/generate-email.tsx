@@ -28,7 +28,7 @@ export function GenerateEmail({
           project={body.repository.full_name}
           branchName={body.pull_request.head.ref}
           title={body.pull_request.title}
-          description={JSON.stringify(body)}
+          description={body.pull_request.body}
           author={body.pull_request.user.login}
           date={new Date().toISOString()}
           url={body.pull_request.html_url}
@@ -40,22 +40,21 @@ export function GenerateEmail({
     if (trigger === 'push') {
       return (
         <PushEmailTemplate
-          project=""
-          branchName=""
-          author=""
-          url=""
+          project={body.project.path_with_namespace}
+          branchName={body.ref.split('/').pop()}
+          author={body.user_username}
           date={new Date().toISOString()}
         />
       )
     } else {
       return (
         <PrEmailTemplate
-          project=""
-          branchName=""
-          title=""
-          description={JSON.stringify(body)}
-          author=""
-          url=""
+          project={body.project.path_with_namespace}
+          branchName={body.object_attributes.target_branch}
+          title={body.object_attributes.title}
+          description={body.object_attributes.description}
+          author={body.user.username}
+          url={body.object_attributes.url}
           date={new Date().toISOString()}
         />
       )
