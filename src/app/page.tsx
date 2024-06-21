@@ -2,6 +2,7 @@ import { auth } from '@/auth'
 import { AlertList } from '@/components/alertList/alert-list'
 import { Creator } from '@/components/creator/creator'
 import { SignIn } from '@/components/signIn/sign-in'
+import { SignOut } from '@/components/signOut/sign-out'
 
 export default async function Home() {
   const session = await auth()
@@ -12,10 +13,13 @@ export default async function Home() {
       </h1>
       <div>
         {session?.user ? (
-          <div className="flex flex-col gap-4 w-[80vw] items-center">
-            <Creator />
-            <AlertList />
-          </div>
+          <>
+            <SignOut />
+            <div className="flex flex-col gap-4 w-[80vw] items-center">
+              <Creator />
+              <AlertList />
+            </div>
+          </>
         ) : (
           <SignIn />
         )}
